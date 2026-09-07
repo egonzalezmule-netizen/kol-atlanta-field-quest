@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101f3d" />
+    <meta name="description" content="A simple daily Atlanta field quest for Kelley On Location." />
+    <title>Kelley Atlanta Field Quest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+    <style>
+:root {
+  --navy: #101f3d; --ink: #111827; --blue: #3157d5; --coral: #ee5a53; --yellow: #ffc642;
+  --green: #08775b; --paper: #f4f6fb; --white: #fff; --muted: #5d687a; --line: #cbd5e4;
+  --soft: #e9eef8; --shadow: 0 12px 30px rgb(16 31 61 / 7%); --mono: "IBM Plex Mono", ui-monospace, monospace; --sans: "Archivo", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; }
+button, textarea, input { font: inherit; }
+button { min-height: 44px; overflow-wrap: anywhere; }
+[hidden] { display: none !important; }
+.skip-link { position: fixed; top: -100px; left: 1rem; z-index: 100; background: var(--yellow); color: var(--ink); padding: .75rem 1rem; font-weight: 800; }
+.skip-link:focus { top: 1rem; }
+.site-header { background: var(--navy); color: white; }
+.header-inner { max-width: 1060px; min-height: 82px; margin: auto; padding: 1rem 1.25rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.eyebrow { margin: 0; font: 600 .73rem/1.3 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+h1 { margin: .16rem 0 0; font-size: 1.75rem; line-height: 1; letter-spacing: -.045em; font-weight: 900; overflow-wrap: anywhere; }
+.top-column, .work-column, .side-column, .header-inner > div { min-width: 0; }
+.header-metrics { display: flex; gap: 1.35rem; }
+.header-progress { display: grid; text-align: right; }
+.header-progress strong { color: var(--yellow); font: 600 1.15rem/1 var(--mono); }
+.header-progress span { margin-top: .22rem; color: rgb(255 255 255 / 72%); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; }
+.day-wrap { max-width: 1060px; margin: auto; padding: 1rem 1.25rem 0; }
+.day-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); background: white; box-shadow: var(--shadow); }
+.day-nav button { min-width: 0; border: 0; border-right: 1px solid var(--line); background: white; color: var(--muted); padding: .68rem .5rem; font-weight: 800; cursor: pointer; }
+.day-nav button:last-child { border-right: 0; }
+.day-nav button span { display: block; font: 600 .68rem/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.day-nav button[aria-current="page"] { background: var(--blue); color: white; }
+.page-shell { max-width: 1060px; margin: auto; padding: 1.6rem 1.25rem 3rem; display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 1.7rem; align-items: start; }
+.top-column { grid-column: 1 / -1; }
+.day-intro { margin-bottom: 1.1rem; }
+.accent { color: var(--blue); }
+.day-intro h2 { margin: .28rem 0 .5rem; font-size: clamp(2rem, 5vw, 3.35rem); line-height: .97; letter-spacing: -.055em; font-weight: 900; overflow-wrap: anywhere; }
+.day-intro > p:last-of-type { max-width: 720px; margin: 0; color: var(--muted); font-size: 1.03rem; line-height: 1.62; }
+.session-tags { display: flex; flex-wrap: wrap; gap: .42rem; margin-top: .8rem; }
+.session-tags span { border: 1px solid var(--line); background: var(--soft); padding: .35rem .56rem; font: 600 .74rem/1.2 var(--mono); }
+.top-grid { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 1.7rem; align-items: stretch; }
+.question-card { border: 0; background: var(--navy); color: white; padding: 1.25rem; box-shadow: var(--shadow); }
+.question-card .eyebrow { color: var(--yellow); }
+.question-card strong { display: block; margin-top: .62rem; font-size: clamp(1.18rem, 2.5vw, 1.52rem); line-height: 1.42; letter-spacing: -.02em; }
+.question-card > p:last-child { margin: .72rem 0 0; color: rgb(255 255 255 / 72%); font-size: .88rem; line-height: 1.5; }
+.field-card { position: relative; margin-top: 1rem; border: 1px solid var(--line); background: white; padding: 1.25rem; box-shadow: var(--shadow); }
+.field-card h3 { margin: .28rem 0 0; font-size: 1.32rem; line-height: 1.2; letter-spacing: -.025em; font-weight: 900; overflow-wrap: anywhere; }
+.step-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.step-kicker { margin: 0; color: var(--blue); font: 600 .76rem/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.step-state { color: var(--muted); font: 600 .7rem/1.2 var(--mono); }
+.step-state.complete { color: var(--green); }
+.section-note { margin: .5rem 0 0; color: var(--muted); font-size: .88rem; line-height: 1.5; }
+.choice-grid { display: grid; gap: .72rem; margin-top: 1rem; }
+.three-up { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.two-up, .destination-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.destination-grid { display: grid; gap: .75rem; margin-top: 1rem; }
+.choice-card { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: start; gap: .68rem; min-height: 86px; border: 1px solid var(--line); background: white; padding: .9rem; cursor: pointer; transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
+.choice-card input { position: absolute; opacity: 0; pointer-events: none; }
+.choice-card:has(input:checked) { border-color: var(--blue); box-shadow: 4px 4px 0 var(--blue); transform: translate(-2px, -2px); }
+.choice-card:has(input:focus-visible) { outline: 3px solid rgb(49 87 213 / 25%); outline-offset: 3px; }
+.three-up .choice-card:first-child { border-color: #d7aa2e; background: #fff9e7; }
+.choice-marker { width: 18px; height: 18px; margin-top: 1px; border: 1.5px solid #8491a6; border-radius: 50%; }
+.choice-card:has(input:checked) .choice-marker { border: 5px solid var(--blue); }
+.choice-copy { min-width: 0; overflow-wrap: anywhere; }
+.choice-copy strong { display: block; font-size: 1rem; line-height: 1.28; }
+.choice-copy small { display: block; margin-top: .3rem; color: var(--muted); font-size: .84rem; line-height: 1.46; }
+.choice-logistics { display: block; margin-top: .48rem; color: var(--ink); font-size: .78rem; line-height: 1.42; }
+.map-link, .venue-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: .3rem; color: var(--blue); font-size: .875rem; font-weight: 800; text-decoration: underline; }
+.map-link { margin-right: .8rem; }
+.choice-badge { display: inline-block; margin-top: .55rem; border-radius: 999px; background: var(--soft); color: var(--blue); padding: .22rem .48rem; font: 600 .65rem/1.2 var(--mono); text-transform: uppercase; }
+.connection-preview { margin-top: .9rem; border-left: 4px solid var(--blue); background: var(--soft); padding: .8rem .9rem; }
+.connection-preview span { color: var(--blue); font: 600 .7rem/1.2 var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.connection-preview p { margin: .38rem 0 0; color: var(--ink); font-size: .875rem; line-height: 1.5; }
+.lane-lens { margin-top: .9rem; border-left: 4px solid var(--blue); background: var(--soft); padding: .8rem .9rem; }
+.lane-lens span { display: block; color: var(--blue); font: 600 .7rem/1.2 var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.lane-lens strong { display: block; margin-top: .25rem; }
+.lane-lens p { margin: .28rem 0 0; color: var(--muted); font-size: .88rem; line-height: 1.5; }
+.branch-card { margin-top: 1.6rem; border-top: 4px solid var(--blue); }
+.branch-tab { position: absolute; top: -1.48rem; left: 1rem; background: var(--blue); color: white; padding: .3rem .56rem; font: 600 .68rem/1.2 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+.destination-card { min-height: 145px; }
+.write-in-panel { margin-top: 1rem; border: 2px solid var(--blue); background: var(--soft); padding: 1rem; }
+.write-in-panel label { display: block; font-size: .94rem; }
+.write-in-panel input { width: 100%; min-height: 48px; margin-top: .48rem; border: 1px solid #aeb9ca; border-radius: 8px; background: white; color: var(--ink); padding: .7rem .8rem; font-size: 1rem; }
+.write-in-panel input:focus { outline: 3px solid rgb(49 87 213 / 20%); border-color: var(--blue); }
+.write-in-panel p { margin: .55rem 0 0; color: var(--muted); font-size: .85rem; line-height: 1.48; }
+.quest-card { border: 0; background: var(--navy); color: white; }
+.quest-card > h3 { color: var(--yellow); font-size: 1.45rem; }
+.assignment-prompt { margin-top: 1rem; border-left: 4px solid var(--yellow); background: rgb(255 255 255 / 7%); padding: 1rem; }
+.assignment-prompt span { color: var(--yellow); font: 600 .73rem/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.assignment-prompt p { margin: .5rem 0 0; color: rgb(255 255 255 / 88%); font-size: .96rem; line-height: 1.58; }
+.report-card { border-top: 5px solid var(--yellow); }
+.note-label { position: relative; display: grid; gap: .48rem; margin-top: 1rem; font-size: .94rem; line-height: 1.45; font-weight: 800; }
+textarea { width: 100%; min-height: 160px; border: 1px solid #aeb9ca; border-radius: 8px; background: #fbfcff; color: var(--ink); padding: .8rem .85rem; font-size: 1rem; line-height: 1.55; resize: vertical; }
+textarea:focus { outline: 3px solid rgb(49 87 213 / 20%); border-color: var(--blue); }
+.note-label em { position: static; justify-self: end; color: var(--muted); font: 500 .7rem/1 var(--mono); font-style: normal; }
+.note-label em[data-state="within-guidance"] { color: #087443; font-weight: 700; }
+.artifact-box { margin-top: 1rem; border-left: 5px solid var(--coral); background: #fff4f2; padding: .85rem 1rem; }
+.artifact-box strong { font-size: .92rem; }
+.artifact-box p { margin: .35rem 0 0; color: var(--muted); font-size: .85rem; line-height: 1.48; }
+.build-row, .output-actions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; }
+.draft-status, .copy-status { margin: 0; color: var(--muted); font-size: .82rem; }
+.primary-button, .secondary-button { border-radius: 8px; padding: .72rem 1rem; font-weight: 800; cursor: pointer; }
+.primary-button { border: 1px solid var(--blue); background: var(--blue); color: white; }
+.primary-button:hover { background: #2949b5; }
+.primary-button:disabled { border-color: #a7b2c4; background: #a7b2c4; cursor: not-allowed; }
+.secondary-button { border: 1px solid var(--navy); background: var(--navy); color: white; }
+.text-button { min-height: 44px; border: 0; background: transparent; color: var(--blue); padding: .4rem 0; text-decoration: underline; font-weight: 700; cursor: pointer; }
+.output-card { border-top: 5px solid var(--green); }
+.output-card h3 { max-width: calc(100% - 110px); }
+.passport-stamp { position: absolute; top: 1rem; right: 1.15rem; width: 88px; height: 88px; display: grid; place-content: center; border: 3px double var(--coral); border-radius: 50%; color: var(--coral); text-align: center; transform: rotate(10deg) scale(1); opacity: 1; }
+.passport-stamp span, .passport-stamp small { display: block; font: 600 .58rem/1.15 var(--mono); letter-spacing: .06em; }
+.passport-stamp b { display: block; margin: .08rem 0; font: 900 1.55rem/1 var(--sans); letter-spacing: -.05em; }
+.passport-stamp.stamp-in { animation: stamp-in .52s cubic-bezier(.2,.9,.25,1.25) both; }
+@keyframes stamp-in { 0% { opacity: 0; transform: rotate(-15deg) scale(1.8); } 70% { opacity: 1; transform: rotate(12deg) scale(.92); } 100% { transform: rotate(10deg) scale(1); } }
+.output-card textarea { min-height: 330px; margin-top: .85rem; font-family: var(--mono); font-size: .8rem; }
+.submitted-check { display: flex; align-items: center; gap: .52rem; font-size: .88rem; font-weight: 700; }
+.submitted-check input { width: 20px; height: 20px; accent-color: var(--blue); }
+.side-column { position: sticky; top: 1rem; }
+.signal-card { border: 1px solid #dea925; background: var(--yellow); padding: 1.25rem; box-shadow: 8px 8px 0 var(--navy); }
+.signal-card > strong { display: block; margin-top: .65rem; font-size: 1.18rem; line-height: 1.45; font-weight: 900; }
+.signal-card > p:last-child { margin: .75rem 0 0; color: rgb(16 31 61 / 70%); font-size: .85rem; line-height: 1.5; }
+.task-steps { box-shadow: 6px 6px 0 var(--navy); }
+.task-steps ol { margin: .7rem 0 0; padding-left: 1.25rem; color: rgb(16 31 61 / 80%); font-size: .82rem; line-height: 1.48; }
+.task-steps li + li { margin-top: .32rem; }
+.task-steps > p:last-child strong { font-weight: 900; }
+.compact-card { box-shadow: none; font-size: .89rem; line-height: 1.55; }
+.mini-title { margin: 0; font-weight: 900; }
+.compact-card p:nth-child(2) { color: var(--muted); }
+.plan-card { border-top: 4px solid var(--blue); }
+.selection-summary { display: grid; gap: .72rem; margin: .85rem 0 0; }
+.selection-summary div { border-top: 1px solid var(--line); padding-top: .55rem; }
+.selection-summary dt { color: var(--muted); font: 600 .68rem/1.2 var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.selection-summary dd { margin: .22rem 0 0; font-weight: 800; overflow-wrap: anywhere; }
+.badge-card { border-top: 4px solid var(--blue); }
+.earned-badges { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .7rem; }
+.earned-badges span { border: 1px dashed #9aa7ba; border-radius: 999px; background: var(--paper); color: var(--muted); padding: .4rem .58rem; font: 600 .68rem/1.2 var(--mono); }
+.earned-badges span.unlocked { border-style: solid; border-color: var(--blue); background: var(--blue); color: white; }
+.integrator-shell { max-width: 1060px; margin: 0 auto 3rem; padding: 1.5rem; border: 2px solid var(--yellow); background: var(--navy); color: white; box-shadow: 10px 10px 0 var(--yellow); }
+.integrator-head h2 { margin: .28rem 0 .45rem; color: var(--yellow); font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1; letter-spacing: -.05em; }
+.integrator-head > p:last-child { max-width: 720px; margin: 0; color: rgb(255 255 255 / 76%); line-height: 1.55; }
+.integrator-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-top: 1.25rem; }
+.integrator-grid article { border: 1px solid rgb(255 255 255 / 22%); background: rgb(255 255 255 / 7%); padding: 1rem; }
+.integrator-grid h3 { margin: .3rem 0 .45rem; font-size: 1rem; }
+.integrator-grid article > p:last-child { margin: 0; color: rgb(255 255 255 / 72%); font-size: .85rem; line-height: 1.5; }
+footer { display: flex; justify-content: space-between; gap: 1rem; background: var(--navy); color: white; padding: 1.5rem 1.25rem; font: 600 .76rem/1.4 var(--mono); }
+footer p { margin: 0; }
+
+@media (max-width: 850px) {
+  .page-shell { grid-template-columns: 1fr; }
+  .top-column { grid-column: auto; }
+  .top-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .side-column { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .side-column .field-card { margin-top: 0; }
+}
+@media (max-width: 650px) {
+  .header-metrics { gap: .75rem; }
+  .header-progress:first-child { display: none; }
+  .day-wrap { padding: .75rem .65rem 0; }
+  .day-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .day-nav button { min-height: 52px; border-bottom: 1px solid var(--line); }
+  .page-shell { padding: 1.25rem .85rem 2.5rem; }
+  .three-up, .two-up, .destination-grid, .side-column, .integrator-grid { grid-template-columns: 1fr; }
+  .choice-card, .destination-card { min-height: 0; }
+  .field-card { padding: 1rem; }
+  .section-note, .choice-copy small, .connection-preview p, .lane-lens p, .assignment-prompt p, .artifact-box p, .note-label, .question-card > p:last-child, .task-steps ol, .write-in-panel p { font-size: 1rem; }
+  .choice-logistics, .session-tags span { font-size: .875rem; }
+  .output-card textarea { font-size: 1rem; }
+  .step-head { gap: .5rem; flex-wrap: wrap; }
+  .branch-tab { position: static; display: inline-block; max-width: 100%; margin-bottom: .75rem; font-size: .75rem; }
+  .build-row, .output-actions { align-items: stretch; flex-direction: column; }
+  .primary-button, .secondary-button { width: 100%; }
+  .draft-status { align-self: flex-start; }
+  .signal-card { box-shadow: 6px 6px 0 var(--navy); }
+  .output-card h3 { max-width: none; padding-right: 0; }
+  .passport-stamp { position: static; float: right; margin: 0 0 .7rem .7rem; }
+  .integrator-shell { margin: 0 .85rem 2.5rem; box-shadow: 6px 6px 0 var(--yellow); }
+  footer { flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
+
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#quest">Skip to today’s quest</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <div><p class="eyebrow">Kelley On Location · Atlanta</p><h1>Daily Field Quest</h1></div>
+        <div class="header-metrics">
+          <div class="header-progress"><strong id="progress-count">0/3</strong><span>choices made</span></div>
+          <div class="header-progress" aria-live="polite" title="Today only. Copying is not submission to Canvas."><strong id="stamp-count">Not copied</strong><span>Canvas text</span></div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="day-wrap" id="day-wrap" aria-label="Residency day"><div class="day-nav" id="day-nav"></div></nav>
+
+    <main id="quest" class="page-shell" tabindex="-1">
+      <section class="top-column">
+        <div class="day-intro">
+          <p class="eyebrow accent" id="day-meta"></p>
+          <h2 id="day-title"></h2>
+          <p id="day-intro"></p>
+          <div class="session-tags" id="session-tags"></div>
+        </div>
+
+        <div class="top-grid">
+          <section class="question-card" aria-labelledby="today-question-title">
+            <p class="eyebrow" id="today-question-title">Today’s question</p>
+            <strong id="daily-question"></strong>
+            <p>Keep this question in mind as you choose how you will work and where you will go. Your choices tailor the activity; everyone answers this one question.</p>
+          </section>
+
+          <section class="signal-card task-steps" aria-labelledby="task-steps-title">
+            <p class="eyebrow" id="task-steps-title">How to complete today’s Field Quest</p>
+            <ol>
+              <li>Read today’s question.</li>
+              <li>Make the three choices below.</li>
+              <li>Use your tailored activity while you explore, then aim for a 40–100-word response.</li>
+              <li>Prepare and copy your text, paste it into Canvas, add one photo, and submit there.</li>
+            </ol>
+            <p><strong>This page prepares your text; it does not submit the assignment.</strong></p>
+          </section>
+        </div>
+      </section>
+
+      <section class="work-column">
+
+        <section class="field-card" aria-labelledby="crew-title">
+          <div class="step-head"><p class="step-kicker">Choice 1 of 3 · How you’ll work</p><span class="step-state" id="crew-state">Pick one</span></div>
+          <h3 id="crew-title">How will you do this?</h3>
+          <div class="choice-grid three-up" id="crew-options" role="radiogroup" aria-label="Crew mode"></div>
+          <div class="connection-preview"><span>Today’s learning goal</span><p id="connection-preview"></p></div>
+        </section>
+
+        <section class="field-card" aria-labelledby="lane-title">
+          <div class="step-head"><p class="step-kicker">Choice 2 of 3 · Setting type</p><span class="step-state" id="lane-state">Pick one</span></div>
+          <h3 id="lane-title">What kind of Atlanta setting works for you?</h3>
+          <div class="choice-grid two-up" id="lane-options" role="radiogroup" aria-label="Atlanta setting type"></div>
+        </section>
+
+        <section class="field-card branch-card" id="destination-section" aria-labelledby="destination-title" hidden>
+          <div class="branch-tab">One place for today</div>
+          <div class="step-head"><p class="step-kicker">Choice 3 of 3 · Place</p><span class="step-state" id="destination-state">Pick one</span></div>
+          <h3 id="destination-title">Where will you complete today’s activity?</h3>
+          <p class="section-note" id="destination-note"><strong>Choose a place you have not used for another Field Quest.</strong> Each card previews a small change in focus; you will still answer just one question. Check current hours before an optional outing. At a busy or quiet venue, talk just before or after the visit.</p>
+          <div class="lane-lens" id="lane-lens" hidden>
+            <span>Today’s lens</span>
+            <strong id="lane-lens-title"></strong>
+            <p id="lane-lens-copy"></p>
+          </div>
+          <div class="destination-grid" id="destination-options" role="radiogroup" aria-label="Atlanta destination"></div>
+          <div class="write-in-panel" id="write-in-panel" hidden>
+            <label for="custom-place"><strong>Where will you meet?</strong></label>
+            <input id="custom-place" type="text" autocomplete="off" placeholder="Enter the restaurant, café, food hall, or other Atlanta location" />
+            <p>Any place is fine—the purpose is to spend time together and discuss today’s question. The independent option may use any suitable setting too.</p>
+          </div>
+        </section>
+
+        <section class="field-card quest-card" id="assignment-section" aria-labelledby="assignment-title" hidden>
+          <p class="eyebrow">Next · Use your tailored activity</p>
+          <h3 id="assignment-title"></h3>
+          <div class="assignment-prompt"><span>Your activity + question</span><p id="quest-prompt"></p></div>
+        </section>
+
+        <section class="field-card report-card" id="report-section" aria-labelledby="report-title" hidden>
+          <p class="step-kicker">Then · Write your response</p>
+          <h3 id="report-title">One response. One photo.</h3>
+          <label class="note-label" for="field-note">
+            <span id="report-prompt">Answer the prompt above. Aim for 40–100 words.</span>
+            <textarea id="field-note" aria-describedby="length-guidance" placeholder="Answer today’s question using your conversation or solo reflection."></textarea>
+            <em id="note-count" data-state="outside-guidance">0 words · aim for 40–100</em>
+          </label>
+          <p class="section-note" id="length-guidance"><strong>Expected length: 40–100 words.</strong> You may still prepare your Canvas text if your response is shorter or longer.</p>
+
+          <div class="artifact-box">
+            <strong>Add one required photo in Canvas</strong>
+            <p>Submit one photo of the Atlanta setting where you completed the activity—a view of the place or a detail is fine. If you so choose, group selfies with the place in the photo are welcome. You do not need a separate written explanation of the photo.</p>
+          </div>
+
+          <div class="build-row"><p class="draft-status" id="draft-status" aria-live="polite">Drafts stay in this browser when storage is available.</p><button class="primary-button" id="build-button" type="button" disabled>Complete the choices above to continue</button></div>
+        </section>
+
+        <section class="field-card output-card" id="output-card" aria-labelledby="output-title" hidden>
+          <div class="passport-stamp" id="passport-stamp" aria-hidden="true" hidden><span id="stamp-day">WED</span><b>ATL</b><small>COPIED</small></div>
+          <p class="step-kicker">Finally · Copy and submit in Canvas</p>
+          <h3 id="output-title">Copy this text, then add your photo in Canvas.</h3>
+          <p class="section-note">This page does not submit to Canvas. After copying, paste the text and add your photo in Canvas, then submit there. The header shows whether today’s current text has been copied on this open page; it resets when you reload.</p>
+          <textarea id="canvas-output" aria-label="Canvas-ready response" readonly></textarea>
+          <div class="output-actions"><button class="secondary-button" id="copy-button" type="button">Copy text for Canvas</button></div>
+          <p class="copy-status" id="copy-status" role="status"></p>
+        </section>
+      </section>
+
+      <aside class="side-column">
+        <section class="field-card compact-card plan-card">
+          <p class="mini-title">Your choices</p>
+          <dl class="selection-summary" aria-live="polite">
+            <div><dt>Working</dt><dd id="crew-summary">Not chosen yet</dd></div>
+            <div><dt>Setting</dt><dd id="lane-summary">Not chosen yet</dd></div>
+            <div><dt>Place</dt><dd id="place-summary">Not chosen yet</dd></div>
+          </dl>
+        </section>
+        <section class="field-card compact-card"><p class="mini-title">Better with classmates</p><p>A squad or pair is encouraged because discussing the day is the point. If that is not workable, use the independent option. Everyone submits their own response.</p></section>
+        <section class="field-card compact-card privacy-note"><p class="mini-title">Simple photo evidence</p><p>One photo of your setting is enough. No GPS or receipts are needed; group selfies with the place are welcome if you choose.</p><button class="text-button" id="clear-button" type="button">Clear this day’s draft</button></section>
+      </aside>
+    </main>
+
+    <footer><p>Explore. Connect. Apply.</p><p>Assess. Align. Accelerate.</p></footer>
+
+    <template id="choice-template"><label class="choice-card"><input type="radio" /><span class="choice-marker" aria-hidden="true"></span><span class="choice-copy"><strong></strong><small></small></span></label></template>
+    <script>
+const DAYS = [
+  {
+    id: 'connect', short: 'Wed', theme: 'Connect', meta: 'Wednesday · Welcome + strategic networking',
+    title: 'Rebuild the relationships that matter.',
+    intro: 'Your personal board of directors changes over time. Use Atlanta to think about which relationships need attention—and whose board you are on.',
+    sessions: ['Strategic Networking 2.0', 'Personal board of directors'],
+  },
+  {
+    id: 'assess', short: 'Thu', theme: 'Assess', meta: 'Thursday · Managing Up + values + Braves',
+    title: 'Look beneath the behavior.',
+    intro: 'Instead of labeling a difficult boss, look for the once-useful belief behind the behavior. Then use your values to decide how to respond.',
+    sessions: ['Managing Up', 'Values as a decision filter'],
+  },
+  {
+    id: 'align', short: 'Fri', theme: 'Align', meta: 'Friday · AI + negotiation + Mercedes-Benz Stadium',
+    title: 'Find room to grow.',
+    intro: 'An MBA expands what you can contribute, but your job will not automatically expand with it. Practice spotting where you could create—and credibly claim—more value.',
+    sessions: ['AI + the future of work', 'Negotiating the value of your MBA'],
+  },
+  {
+    id: 'accelerate', short: 'Sat', theme: 'Accelerate', meta: 'Saturday · Star Career Traps + alumni panel + GAPS + Georgia Aquarium',
+    title: 'Choose your next development priority.',
+    intro: 'Use Star Career Traps, the alumni panel, and GAPS to identify the growth that will help you achieve your career goals. That could mean developing in your current role, building a skill, or changing how you work—not necessarily changing jobs.',
+    sessions: ['Star Career Traps', 'Alumni panel: MBA careers in the age of AI', 'GAPS: insight to action', 'Georgia Aquarium'],
+  },
+];
+
+const CREWS = [
+  ['squad', 'Squad · 3–5 people', 'Discuss today’s prompt together, then each write your own response.', 'Recommended'],
+  ['pair', 'Pair · 2 people', 'Discuss today’s prompt with a partner, then each write your own response.', 'Easy to organize'],
+  ['solo', 'Solo · on your own', 'Reflect on today’s question independently and submit the same kind of response.', 'Independent option'],
+];
+
+// One daily learning goal; crew and place supply a small variation, not extra questions.
+const DAILY_PROMPTS = {
+  connect: {
+    overview: 'New connection or reconnection: use Strategic Networking 2.0 to build a relationship that can last beyond KD.',
+    squad: 'In your group, each share one thing about your work or changing goals and find a shared interest outside work.',
+    pair: 'With a partner, trade one thing about your work or changing goals and find a shared interest outside work.',
+    solo: 'Working solo, consider someone you could reconnect with and what you know about their work and interests. No outreach is required.',
+    topQuestion: 'Share one thing about your work or changing goals and find a shared interest outside work. If you are working independently, consider someone you could reconnect with. What did this conversation or reflection reveal about a relationship you want to maintain after KD, and how could you be useful to that person?',
+    question: 'What did this conversation or reflection reveal about a relationship you want to maintain after KD, and how could you be useful to that person?',
+  },
+  assess: {
+    overview: 'Team-Up: use Managing Up and your values to look beneath a difficult workplace behavior and consider a constructive response.',
+    squad: 'Each share a workplace behavior you find difficult, without naming people. Compare possible beliefs behind it; each choose one to consider.',
+    pair: 'Share a difficult workplace behavior with your partner, without naming people. Help each other consider a belief that might explain it.',
+    solo: 'Working solo, consider a workplace behavior you find difficult and a belief that might explain it. Avoid naming people.',
+    topQuestion: 'Think about a difficult behavior you have observed at work, without naming the person. What belief might explain the behavior, and how would one of your values shape a constructive way to question that belief?',
+    question: 'What belief might explain the behavior, and how would one of your values shape a constructive way to question that belief?',
+  },
+  align: {
+    overview: 'Feedback Loop: use the negotiation session to make a stronger case for a post-MBA opportunity; AI may change the capabilities you can offer.',
+    squad: 'Each give a 60-second pitch for a post-MBA opportunity. Classmates offer one suggestion that accounts for a decision-maker’s interests or constraints.',
+    pair: 'Trade 60-second pitches for a post-MBA opportunity. Give each other one suggestion that accounts for the decision-maker’s interests or constraints.',
+    solo: 'Working solo, rehearse a 60-second pitch for a post-MBA opportunity. Review it from the decision-maker’s perspective and identify one improvement.',
+    question: 'How would you strengthen your case for one post-MBA opportunity, given the value you could contribute and the decision-maker’s interests or constraints?',
+  },
+  accelerate: {
+    overview: 'Mini-Mastermind: draw on Star Career Traps, the alumni panel, GAPS, and your earlier notes to choose one priority and a next step.',
+    squad: 'Each name one career hurdle or GAPS priority. Classmates offer one useful suggestion; each person chooses a next step.',
+    pair: 'Share one career hurdle or GAPS priority with a partner. Help each other choose a realistic next step.',
+    solo: 'Working solo, name one career hurdle or GAPS priority. Consider what a trusted adviser might suggest as a next step.',
+    question: 'What is one high-priority gap between where you are and where you want to be in your career, and what concrete next step will you take to address it?',
+  },
+};
+
+// Short focus labels make the variation visible before selecting a destination.
+const PLACE_ANGLES = {
+  welcome: ['A new connection', 'At the reception, focus on someone outside your usual circle—or, if solo, someone you would like to know better.'],
+  centennial: ['Keeping in touch', 'Use your park walk to focus on a relationship that may fade without the regular contact KD provides.'],
+  hudson: ['Different backgrounds', 'At Hudson Grille, focus on a relationship with someone whose work experience differs from yours.'],
+  parkBar: ['Informal connections', 'At Park Bar, focus on a relationship that could grow through more informal contact.'],
+  maxs: ['Make time to reconnect', 'At Max’s, focus on a relationship that would benefit from an easy, repeatable reason to meet.'],
+  kwans: ['Connections across experiences', 'At Kwan’s, focus on a classmate whose background or path could broaden how you see your own network.'],
+  noMas: ['Shared interests', 'At No Más!, focus on a shared non-work interest that could help a KD relationship last.'],
+  customConnect: ['Your choice', 'Use your chosen setting to focus on a relationship you want to carry beyond KD.'],
+  truist: ['Control and coordination', 'Let the coordination around the Braves outing bring to mind a belief about control or delegation in your own workplace.'],
+  football: ['Rules and tradition', 'Use a rule or tradition at the Hall of Fame as a starting point for a belief about “how we do things” at work.'],
+  twinSmokers: ['Quality and speed', 'Use the meal setting at Twin Smokers to consider a workplace belief about doing things well versus doing them quickly.'],
+  aviva: ['Assumptions and context', 'At Aviva, focus on what context you may be missing before judging a difficult workplace behavior.'],
+  alma: ['Different values', 'At Alma Cocina, use the conversation to compare how different values could shape a response to the same workplace behavior.'],
+  paschals: ['Beliefs over time', 'At Paschal’s, consider how a workplace belief can outlast the conditions that once made it useful.'],
+  whiteOak: ['Questioning with care', 'At White Oak, focus on how curiosity and respect could help you question a workplace belief constructively.'],
+  customAssess: ['Your choice', 'Use your chosen setting to talk through the behavior, the belief beneath it, and the value that should guide your response.'],
+  stadium: ['Greater responsibility', 'Use the many roles behind the stadium experience to focus your pitch on taking on greater responsibility.'],
+  rights: ['Voice and influence', 'After your museum visit, focus your career pitch on gaining a stronger voice in decisions that affect your work.'],
+  dosBocas: ['A concise case', 'At Dos Bocas, practice making your case direct and memorable while still addressing the decision-maker’s interests.'],
+  rays: ['A decision-maker’s view', 'At Ray’s, strengthen your pitch by naming the constraint or concern a decision-maker is most likely to have.'],
+  hsus: ['Interests around the table', 'At Hsu’s, strengthen your pitch by showing how the opportunity can create value for more than one stakeholder.'],
+  byGeorge: ['A credible value case', 'At By George, strengthen your pitch by showing how the opportunity could create value at an organizational level.'],
+  krog: ['Many paths forward', 'At Krog Street Market, use the variety of local concepts to focus on more than one way your skills could create value.'],
+  customAlign: ['Your choice', 'Use your chosen setting to rehearse your pitch and strengthen it from the decision-maker’s perspective.'],
+  aquarium: ['Expertise and support', 'Use the different roles involved in caring for aquatic life to focus on expertise or support you need for your next career step.'],
+  coke: ['Adapting a strength', 'Use the brand setting at World of Coca-Cola to focus on a strength you need to adapt as your career changes.'],
+  biergarten: ['Support for the next step', 'At Der Biergarten, consider the person, resource, or structure that could help you follow through on your next step.'],
+  breakfastClub: ['Stretching beyond habit', 'At Atlanta Breakfast Club, focus on a strength or routine you may need to adapt for your next stage of growth.'],
+  reubens: ['Make the next step manageable', 'At Reuben’s, focus on how to make your next development step specific enough to begin soon.'],
+  municipal: ['A practical first move', 'At the Municipal Market, focus on a small, concrete action you can take soon rather than a distant ambition.'],
+  maryMacs: ['Sustaining what matters', 'At Mary Mac’s, consider which habit or relationship will help you sustain progress on your development priority.'],
+  customAccelerate: ['Your choice', 'Use your chosen setting to name your priority gap and commit to one concrete next step.'],
+};
+
+// Core Legacy and Art destinations repeat Thursday–Saturday; day-specific additions follow venue hours.
+const DAY_LANE_LENSES = {
+  assess: {
+    legacy: ['Preservation and change', 'Let the setting prompt you to consider what organizations preserve—and when a once-useful belief may need to change.'],
+    design: ['Context and perspective', 'Let the setting’s different perspectives or creative choices remind you to look for context before judging a workplace behavior.'],
+  },
+  align: {
+    legacy: ['Support and influence', 'Let the setting prompt you to consider how people build support, influence decisions, and work within constraints.'],
+    design: ['Creating new value', 'Let the setting’s reinvention or creative choices prompt you to explain how your existing capabilities could create new value.'],
+  },
+  accelerate: {
+    legacy: ['Sustain or change', 'Let the setting prompt you to consider what is worth sustaining—and what needs to change—for your next stage of growth.'],
+    design: ['Development through practice', 'Let the setting’s craft and experimentation prompt you to choose a skill, habit, or way of working to develop next.'],
+  },
+};
+
+const SHARED_LEGACY_OPTIONS = ['sweetAuburn', 'mlk', 'oakland'];
+const SHARED_DESIGN_OPTIONS = ['castleberry', 'ponce', 'high', 'moda'];
+const FRI_SAT_DESIGN_OPTIONS = [...SHARED_DESIGN_OPTIONS, 'hammonds'];
+
+const LANES = [
+  ['program', 'Program route', 'Use today’s scheduled stop or choose something close to the course venue.'],
+  ['legacy', 'Legacy + leadership', 'Core choices repeat Thursday–Saturday: visit a place connected to Atlanta’s civic and leadership story.'],
+  ['design', 'Art + reinvention', 'Core choices repeat Thursday–Saturday, with an extra venue when its published hours allow.'],
+  ['table', 'Food + conversation', 'Use the two-hour lunch break to try an Atlanta spot and discuss today’s question—or write in another place.'],
+];
+
+const PLACES = {
+  welcome: ['Welcome reception + Omni', 'Scheduled', 'Use the welcome reception for your conversation or solo reflection—no separate outing needed.', 'At the Omni—no extra trip.', 'Omni Atlanta Hotel at Centennial Park'],
+  centennial: ['Centennial Olympic Park legacy walk', 'Public space', 'An outdoor setting for a short walk and today’s conversation or solo reflection.', 'Right outside the Omni doors.', 'Centennial Olympic Park Atlanta'],
+  sweetAuburn: ['Historic Sweet Auburn', 'Neighborhood', 'A self-guided outdoor walk through Atlanta’s historic center of Black business and civil-rights leadership.', 'Use directions to compare walking and streetcar options; individual indoor sites keep their own hours.', 'Sweet Auburn Historic District Atlanta'],
+  mlk: ['Martin Luther King, Jr. National Historical Park', 'Historic district', 'Explore the broader historic park, then hold your conversation before or after quiet or commemorative spaces.', 'Use directions to plan the trip; the park is open daily, but the Birth Home is closed for renovation.', 'Martin Luther King Jr National Historical Park Atlanta'],
+  castleberry: ['Castleberry Hill street art', 'Public art', 'A self-guided outdoor mural walk through Atlanta’s historic creative district.', 'Plan the trip from the Omni; galleries keep separate hours, but the exterior murals can be explored in daylight.', 'Castleberry Hill Atlanta murals'],
+  hudson: ['Hudson Grille', 'Sports bar', 'A casual, Atlanta-grown sports bar where a group can settle in and discuss the day.', 'A short walk on Marietta Street.', 'Hudson Grille Downtown Atlanta'],
+  parkBar: ['Park Bar', 'Local pub', 'A longtime downtown neighborhood bar with burgers, sandwiches, and room for an informal conversation.', 'About a 5-minute walk toward Walton Street.', 'Park Bar Atlanta'],
+  maxs: ['Max’s Coal Oven Pizzeria', 'Pizza', 'A downtown Atlanta pizzeria with shareable food and seating that works well for a small group.', 'About a 5-minute walk north on Marietta Street.', 'Max’s Coal Oven Pizzeria Atlanta'],
+  kwans: ['Kwan’s Deli & Korean Kitchen', 'Korean + deli', 'A family-run downtown favorite with Korean dishes, sandwiches, and quick counter service.', 'A short walk north on Marietta Street.', 'Kwan’s Deli and Korean Kitchen Atlanta'],
+  truist: ['The Battery Atlanta + Truist Park', 'Thursday program', 'Use a break during the scheduled Braves outing for today’s activity; no separate destination is needed.', 'Thursday’s scheduled Braves activity. Follow the course itinerary for transportation and meeting points.', 'The Battery Atlanta Truist Park'],
+  football: ['College Football Hall of Fame', 'Attraction', 'A college-football visit close to the course venue. Make time for today’s activity before or afterward.', 'About a 2-minute walk from the Omni entrance.', 'College Football Hall of Fame Atlanta'],
+  oakland: ['Oakland Cemetery', 'History', 'A historic cemetery visit. Use an appropriate place for your conversation and respect other visitors.', 'Take MARTA to King Memorial, then walk about 5 minutes.', 'Oakland Cemetery Atlanta'],
+  high: ['High Museum of Art', 'Art + architecture', 'An art-museum visit. Hold your conversation before or after the galleries, or reflect quietly on your own.', 'Take MARTA to Arts Center Station and keep the visit focused to fit the break; tickets are required.', 'High Museum of Art Atlanta'],
+  moda: ['Museum of Design Atlanta · MODA', 'Design', 'A Midtown museum with a focused, rotating design exhibition.', 'Take MARTA to Arts Center Station, then walk briefly; it opens at noon and tickets are required.', 'Museum of Design Atlanta'],
+  hammonds: ['Hammonds House Museum + John Rhoden Sculpture Garden', 'Fri–Sat · if open', 'A historic West End home devoted to artists of African descent, with a permanent sculpture garden.', 'Friday or Saturday only. Standard hours are 11 a.m.–5 p.m., but access September 11–12 is not confirmed because the next exhibition opens September 18. Confirm admission on the website or by calling (404) 612-0481 before leaving; plan on a rideshare or MARTA plus a local connection.', 'Hammonds House Museum Atlanta', 'https://www.hammondshousemuseum.org/visit'],
+  twinSmokers: ['Twin Smokers BBQ', 'Barbecue', 'A downtown barbecue restaurant with shareable platters and space for a small-group conversation.', 'About a 5-minute walk north on Marietta Street; going early is wise because food can sell out.', 'Twin Smokers BBQ Atlanta'],
+  aviva: ['Aviva by Kameel · Downtown', 'Mediterranean', 'A highly regarded local counter-service lunch spot in Peachtree Center; a good fit when time matters.', 'About a 15-minute walk; weekday lunch service ends midafternoon.', 'Aviva by Kameel Peachtree Center Atlanta'],
+  alma: ['Alma Cocina · Downtown', 'Latin + Mexican', 'An Atlanta restaurant group’s polished downtown spot for a longer lunch conversation.', 'About a 15-minute walk toward Peachtree Street; reservations may help.', 'Alma Cocina Downtown Atlanta'],
+  paschals: ['Paschal’s', 'Historic soul food', 'An Atlanta institution with deep civil-rights history and classic Southern food.', 'About a 20-minute walk or a short rideshare to Castleberry Hill.', 'Paschal’s Restaurant Atlanta'],
+  whiteOak: ['White Oak Kitchen & Cocktails', 'New Southern', 'A downtown restaurant featuring contemporary Southern food in a setting suited to conversation.', 'About a 15-minute walk toward Peachtree Center; check lunch hours and reservations.', 'White Oak Kitchen and Cocktails Atlanta'],
+  stadium: ['Mercedes-Benz Stadium', 'Scheduled', 'Use a break around the scheduled stadium visit for today’s activity.', 'Scheduled group activity; about a 15-minute walk from the Omni.', 'Mercedes-Benz Stadium Atlanta'],
+  rights: ['National Center for Civil and Human Rights', 'Attraction', 'A civil and human rights museum visit. Hold your conversation before or after the exhibits.', 'Near World of Coca-Cola. Use directions from the Omni and check opening hours.', 'National Center for Civil and Human Rights Atlanta'],
+  ponce: ['Ponce City Market + BeltLine', 'Adaptive reuse', 'Explore the reused historic building or take a short walk on the adjacent Eastside Trail.', 'Plan on transit or a rideshare and keep the visit focused to fit the two-hour break.', 'Ponce City Market Atlanta'],
+  aquarium: ['Georgia Aquarium', 'Scheduled', 'Use a break during the closing event for today’s activity, away from busy exhibit areas.', 'Scheduled closing event. Follow the course itinerary; use directions from the Omni.', 'Georgia Aquarium Atlanta'],
+  coke: ['World of Coca-Cola', 'Attraction', 'A World of Coca-Cola visit. Complete today’s activity before or afterward.', 'Use walking directions from the Omni and check opening hours.', 'World of Coca-Cola Atlanta'],
+  noMas: ['No Más! Cantina', 'Mexican', 'A colorful Castleberry Hill restaurant with Mexican food and plenty of visual character.', 'About a 20-minute walk or a short rideshare; leave time for the return trip.', 'No Más Cantina Atlanta'],
+  rays: ['Ray’s in the City', 'Seafood + steak', 'A highly rated downtown Atlanta restaurant for a more polished lunch or business-meal feel.', 'About a 15-minute walk toward Peachtree Street; business-casual dress and reservations are sensible.', 'Ray’s in the City Atlanta'],
+  hsus: ['Hsu’s Gourmet', 'Chinese', 'A longstanding downtown Chinese restaurant with lunch service and group-friendly seating.', 'About a 15-minute walk toward Peachtree Center; weekday lunch hours are limited.', 'Hsu’s Gourmet Atlanta'],
+  byGeorge: ['By George', 'Contemporary American', 'A highly rated restaurant inside Atlanta’s historic Candler Hotel, suited to a longer business-meal conversation.', 'About a 12-minute walk toward Peachtree Street; weekday lunch runs 11:30 a.m.–2:30 p.m., and reservations may help.', 'By George Atlanta Candler Hotel'],
+  krog: ['Krog Street Market', 'Local food hall', 'A food hall beside the BeltLine with several local choices, making it easy for a group with different tastes.', 'Plan on a short rideshare each way and keep an eye on the two-hour lunch window.', 'Krog Street Market Atlanta'],
+  dosBocas: ['Dos Bocas', 'Cajun + Tex-Mex', 'A casual downtown restaurant overlooking Centennial Olympic Park with generous options for groups.', 'About an 8-minute walk toward Baker Street; Friday lunch begins at noon.', 'Dos Bocas Atlanta'],
+  biergarten: ['Der Biergarten', 'German', 'An indoor-outdoor German restaurant on Marietta Street with communal-table energy.', 'About a 5-minute walk; Saturday lunch begins at noon.', 'Der Biergarten Atlanta'],
+  breakfastClub: ['Atlanta Breakfast Club', 'Southern brunch', 'A popular local breakfast-and-lunch spot known for Southern favorites; allow for a possible wait.', 'About an 8-minute walk, across from the Georgia Aquarium.', 'Atlanta Breakfast Club Downtown'],
+  reubens: ['Reuben’s Deli', 'Local deli', 'A locally owned downtown deli serving made-to-order sandwiches since 1996; best for a quick lunch.', 'About a 15-minute walk toward Broad Street; Saturday service ends midafternoon.', 'Reuben’s Deli Atlanta'],
+  municipal: ['Municipal Market · Sweet Auburn', 'Historic food hall', 'A century-old public market with many local food counters, useful when classmates want different cuisines.', 'Take the Atlanta Streetcar toward Sweet Auburn Market or use a short rideshare; merchant hours vary.', 'Municipal Market Sweet Auburn Atlanta'],
+  maryMacs: ['Mary Mac’s Tea Room', 'Atlanta classic', 'A longstanding Atlanta dining room known for traditional Southern cooking.', 'Use MARTA to North Avenue plus a short walk, or take a rideshare; leave time for a possible wait.', 'Mary Mac’s Tea Room Atlanta'],
+  customConnect: ['Somewhere else', 'Your choice', 'Choose another restaurant, café, food hall, or Atlanta meetup spot.', 'Enter the place name below.', ''],
+  customAssess: ['Somewhere else', 'Your choice', 'Choose another restaurant, café, food hall, or Atlanta meetup spot.', 'Enter the place name below.', ''],
+  customAlign: ['Somewhere else', 'Your choice', 'Choose another restaurant, café, food hall, or Atlanta meetup spot.', 'Enter the place name below.', ''],
+  customAccelerate: ['Somewhere else', 'Your choice', 'Choose another restaurant, café, food hall, or Atlanta meetup spot.', 'Enter the place name below.', ''],
+};
+
+const DAY_OPTIONS = {
+  connect: { program: ['welcome', 'centennial'], table: ['hudson', 'parkBar', 'maxs', 'kwans', 'noMas', 'customConnect'] },
+  assess: { program: ['truist', 'football'], legacy: SHARED_LEGACY_OPTIONS, design: SHARED_DESIGN_OPTIONS, table: ['twinSmokers', 'aviva', 'alma', 'paschals', 'whiteOak', 'customAssess'] },
+  align: { program: ['stadium', 'rights'], legacy: SHARED_LEGACY_OPTIONS, design: FRI_SAT_DESIGN_OPTIONS, table: ['dosBocas', 'rays', 'hsus', 'byGeorge', 'krog', 'customAlign'] },
+  accelerate: { program: ['aquarium', 'coke'], legacy: SHARED_LEGACY_OPTIONS, design: FRI_SAT_DESIGN_OPTIONS, table: ['biergarten', 'breakfastClub', 'reubens', 'municipal', 'maryMacs', 'customAccelerate'] },
+};
+
+const CUSTOM_PLACE_IDS = new Set(['customConnect', 'customAssess', 'customAlign', 'customAccelerate']);
+const STORAGE_KEY = 'kol-atlanta-field-quest-v6';
+const TARGET_MIN_WORDS = 40;
+const TARGET_MAX_WORDS = 100;
+const requestedDay = new URLSearchParams(window.location.search).get('day');
+const lockedDay = DAYS.some((day) => day.id === requestedDay) ? requestedDay : '';
+let active = lockedDay || 'connect';
+let state = loadState();
+// Copy progress is daily and lasts only for this open page, never across devices.
+const copiedResponses = {};
+const $ = (selector) => document.querySelector(selector);
+const template = $('#choice-template');
+
+function blankDay() { return { crew: '', lane: '', destination: '', customPlace: '', note: '' }; }
+function loadState() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return Object.fromEntries(DAYS.map((day) => {
+      const saved = Object.fromEntries(Object.keys(blankDay()).map(key => [key, parsed?.[day.id]?.[key] ?? '']));
+      if (!CREWS.some(([id]) => id === saved.crew)) saved.crew = '';
+      if (!DAY_OPTIONS[day.id][saved.lane]) saved.lane = '';
+      if (!DAY_OPTIONS[day.id][saved.lane]?.includes(saved.destination)) saved.destination = '';
+      if (typeof saved.customPlace !== 'string') saved.customPlace = '';
+      if (typeof saved.note !== 'string') saved.note = '';
+      return [day.id, saved];
+    }));
+  } catch { return Object.fromEntries(DAYS.map((day) => [day.id, blankDay()])); }
+}
+function saveState() {
+  try {
+    const stored = loadState();
+    DAYS.forEach((day) => { if (day.id !== active) state[day.id] = stored[day.id]; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    $('#draft-status').textContent = 'Saved in this browser';
+  } catch { $('#draft-status').textContent = 'Browser saving is unavailable. Copy your response before closing this page.'; }
+  updateProgress();
+}
+function currentDay() { return DAYS.find((day) => day.id === active); }
+function markDraftChanged() {
+  delete copiedResponses[active];
+  $('#output-card').hidden = true;
+  $('#copy-status').textContent = '';
+  saveState();
+}
+function responseCopied(day = currentDay(), s = currentState()) {
+  return ready(s) && copiedResponses[day.id] === canvasText(day, s);
+}
+function currentState() { return state[active]; }
+function choice(items, id) { return items.find((item) => item[0] === id); }
+function isCustomPlace(placeId) { return CUSTOM_PLACE_IDS.has(placeId); }
+function dayLaneLens(dayId, laneId) { return DAY_LANE_LENSES[dayId]?.[laneId] || null; }
+function activityAngle(day, s) { return dayLaneLens(day.id, s.lane) || PLACE_ANGLES[s.destination]; }
+function displayQuestion(dayId) { const prompt = DAILY_PROMPTS[dayId]; return prompt.topQuestion || prompt.question; }
+function destinationReady(s) { return Boolean(s.destination && (!isCustomPlace(s.destination) || s.customPlace.trim())); }
+function placeTitle(s) { return isCustomPlace(s.destination) ? (s.customPlace.trim() || 'Your restaurant or meetup spot') : (PLACES[s.destination]?.[0] || 'Not chosen yet'); }
+function wordCount(value) { return value.trim() ? value.trim().split(/\s+/).length : 0; }
+function wordLabel(count) { return `${count} ${count === 1 ? 'word' : 'words'}`; }
+function responseProvided(s) { return Boolean(s.note.trim()); }
+function ready(s) { return Boolean(s.crew && s.lane && destinationReady(s) && responseProvided(s)); }
+function updateNoteCount(value) {
+  const count = wordCount(value); const counter = $('#note-count');
+  const withinGuidance = count >= TARGET_MIN_WORDS && count <= TARGET_MAX_WORDS;
+  counter.textContent = withinGuidance ? `${wordLabel(count)} · within the 40–100-word target` : `${wordLabel(count)} · aim for 40–100`;
+  counter.dataset.state = withinGuidance ? 'within-guidance' : 'outside-guidance';
+}
+
+function makeChoice(group, id, title, description, checked, onChange, badge = '') {
+  const node = template.content.firstElementChild.cloneNode(true);
+  const input = node.querySelector('input'); input.name = group; input.value = id; input.checked = checked;
+  node.querySelector('strong').textContent = title; node.querySelector('small').textContent = description;
+  if (badge) { const tag = document.createElement('b'); tag.className = 'choice-badge'; tag.textContent = badge; node.querySelector('.choice-copy').appendChild(tag); }
+  input.addEventListener('change', onChange); return node;
+}
+
+function buildNavigation() {
+  const wrap = $('#day-wrap');
+  if (lockedDay) { wrap.hidden = true; return; }
+  const nav = $('#day-nav'); nav.innerHTML = '';
+  DAYS.forEach((day) => {
+    const button = document.createElement('button'); button.type = 'button'; button.dataset.day = day.id;
+    button.setAttribute('aria-current', day.id === active ? 'page' : 'false');
+    button.innerHTML = `<span>${day.short}</span>${day.theme}`;
+    button.addEventListener('click', () => { active = day.id; renderDay(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    nav.appendChild(button);
+  });
+}
+
+function renderChoices(container, group, items, selected, onChange) {
+  container.innerHTML = '';
+  items.forEach(([id, title, description, badge]) => container.appendChild(makeChoice(group, id, title, description, selected === id, onChange, badge)));
+}
+
+function renderCrew(day, s) {
+  renderChoices($('#crew-options'), `${active}-crew`, CREWS, s.crew, (event) => { s.crew = event.target.value; markDraftChanged(); renderDay(true); });
+  $('#connection-preview').textContent = DAILY_PROMPTS[day.id].overview;
+}
+
+function renderLanes(day, s) {
+  const lanes = LANES.filter(([id]) => DAY_OPTIONS[day.id][id]?.length);
+  renderChoices($('#lane-options'), `${active}-lane`, lanes, s.lane, (event) => {
+    if (s.lane !== event.target.value) { s.lane = event.target.value; s.destination = ''; s.customPlace = ''; }
+    markDraftChanged(); renderDay(true); $('#destination-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+function renderDestinations(day, s) {
+  const section = $('#destination-section'); const writeIn = $('#write-in-panel'); const lensBox = $('#lane-lens');
+  section.hidden = !s.lane; writeIn.hidden = true; lensBox.hidden = true; if (!s.lane) return;
+  const lens = dayLaneLens(day.id, s.lane);
+  if (s.lane === 'table') {
+    $('#destination-note').innerHTML = '<strong>These restaurant ideas are suggestions, not requirements.</strong> Choose one, or select “Somewhere else” and enter your own. Pick a place you have not used for another Field Quest. Use the two-hour lunch break to explore, discuss today’s question, and return on time. Check current hours, wait times, and travel before leaving.';
+  } else if (lens) {
+    $('#destination-note').innerHTML = '<strong>The core exploration choices repeat Thursday through Saturday so you can use them on the day that works best.</strong> Some day-specific additions appear only when published hours allow. Choose one place today, and do not use the same place for more than one Field Quest. Check current hours and travel before leaving. At a busy or quiet venue, talk just before or after the visit.';
+    lensBox.hidden = false; $('#lane-lens-title').textContent = lens[0]; $('#lane-lens-copy').textContent = lens[1];
+  } else {
+    $('#destination-note').innerHTML = '<strong>Choose a place you have not used for another Field Quest.</strong> Each card previews a small change in focus; you will still answer just one question. Check current hours before an optional outing. At a busy or quiet venue, talk just before or after the visit.';
+  }
+  const container = $('#destination-options'); container.innerHTML = '';
+  DAY_OPTIONS[day.id][s.lane].forEach((placeId) => {
+    const [title, tag, setting, logistics, mapQuery, venueUrl] = PLACES[placeId];
+    const node = makeChoice(`${active}-destination`, placeId, title, setting, s.destination === placeId, (event) => {
+      s.destination = event.target.value;
+      if (!isCustomPlace(s.destination)) s.customPlace = '';
+      markDraftChanged(); renderDay(true);
+      (isCustomPlace(s.destination) ? $('#write-in-panel') : $('#assignment-section')).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, tag);
+    const details = document.createElement('span'); details.className = 'choice-logistics'; details.textContent = `${isCustomPlace(placeId) ? 'Next' : 'Getting there'}: ${logistics}`;
+    if (!lens) {
+      const angle = document.createElement('span'); angle.className = 'choice-logistics'; angle.textContent = `Focus: ${PLACE_ANGLES[placeId][0]}`;
+      node.querySelector('.choice-copy').appendChild(angle);
+    }
+    node.querySelector('.choice-copy').appendChild(details);
+    if (mapQuery) {
+      const map = document.createElement('a'); map.className = 'map-link'; map.href = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent('Omni Atlanta Hotel at Centennial Park')}&destination=${encodeURIComponent(mapQuery)}`; map.target = '_blank'; map.rel = 'noopener'; map.textContent = 'Directions from the Omni ↗'; map.addEventListener('click', (event) => event.stopPropagation());
+      node.querySelector('.choice-copy').appendChild(map);
+    }
+    if (venueUrl) {
+      const venue = document.createElement('a'); venue.className = 'venue-link'; venue.href = venueUrl; venue.target = '_blank'; venue.rel = 'noopener'; venue.textContent = 'Check venue availability ↗'; venue.addEventListener('click', (event) => event.stopPropagation());
+      node.querySelector('.choice-copy').appendChild(venue);
+    }
+    node.classList.add('destination-card'); container.appendChild(node);
+  });
+  if (isCustomPlace(s.destination)) {
+    writeIn.hidden = false;
+    const input = $('#custom-place'); input.value = s.customPlace;
+    input.oninput = () => {
+      s.customPlace = input.value; markDraftChanged();
+      $('#assignment-title').textContent = placeTitle(s); renderSummary(s);
+      stepState('#destination-state', destinationReady(s), 'Add place name'); updateBuildButton();
+    };
+  }
+}
+
+function questPrompt(day, s) {
+  const prompt = DAILY_PROMPTS[day.id];
+  return `${prompt[s.crew] || 'Choose squad, pair, or solo above to see how you will work.'} ${activityAngle(day, s)[1]} ${prompt.question}`;
+}
+
+function renderAssignment(day, s) {
+  const visible = Boolean(s.destination);
+  $('#assignment-section').hidden = !visible; $('#report-section').hidden = !visible;
+  if (!visible) return;
+  $('#assignment-title').textContent = placeTitle(s); $('#quest-prompt').textContent = questPrompt(day, s);
+  const note = $('#field-note'); note.value = s.note; updateNoteCount(s.note);
+  note.oninput = () => { s.note = note.value; updateNoteCount(s.note); $('#draft-status').textContent = 'Saving…'; markDraftChanged(); updateBuildButton(); };
+  updateBuildButton();
+}
+
+function stepState(selector, complete, pending = 'Pick one') { const el = $(selector); el.textContent = complete ? '✓ Chosen' : pending; el.classList.toggle('complete', complete); }
+
+function renderSummary(s) {
+  $('#crew-summary').textContent = choice(CREWS, s.crew)?.[1] || 'Not chosen yet';
+  $('#lane-summary').textContent = choice(LANES, s.lane)?.[1] || 'Not chosen yet';
+  $('#place-summary').textContent = s.destination ? placeTitle(s) : 'Not chosen yet';
+}
+
+function renderDay(preserveScroll = false) {
+  const scrollY = window.scrollY; const day = currentDay(); const s = currentState();
+  if (!DAY_OPTIONS[day.id][s.lane]) { s.lane = ''; s.destination = ''; s.customPlace = ''; }
+  if (s.lane && !DAY_OPTIONS[day.id][s.lane].includes(s.destination)) s.destination = '';
+  if (!isCustomPlace(s.destination)) s.customPlace = '';
+  document.title = `${day.short} · ${day.theme} | Kelley Atlanta Field Quest`;
+  $('#day-meta').textContent = day.meta; $('#day-title').textContent = day.title; $('#day-intro').textContent = day.intro; $('#session-tags').innerHTML = day.sessions.map((tag) => `<span>${tag}</span>`).join(''); $('#daily-question').textContent = displayQuestion(day.id);
+  renderCrew(day, s); renderLanes(day, s); renderDestinations(day, s); renderAssignment(day, s);
+  stepState('#crew-state', Boolean(s.crew)); stepState('#lane-state', Boolean(s.lane)); stepState('#destination-state', destinationReady(s), s.destination ? 'Add place name' : 'Pick one');
+  renderSummary(s);
+  $('#output-card').hidden = true; $('#copy-status').textContent = '';
+  document.querySelectorAll('#day-nav button').forEach((button) => button.setAttribute('aria-current', button.dataset.day === day.id ? 'page' : 'false'));
+  updateProgress(); if (preserveScroll) window.scrollTo(0, scrollY);
+}
+
+function updateProgress() {
+  const s = currentState(); const count = [Boolean(s.crew), Boolean(s.lane), destinationReady(s)].filter(Boolean).length;
+  $('#progress-count').textContent = `${count}/3`;
+  const copied = responseCopied();
+  $('#stamp-count').textContent = copied ? 'Copied' : 'Not copied';
+  $('#passport-stamp').hidden = !copied;
+}
+
+function updateBuildButton() {
+  const button = $('#build-button'); const s = currentState(); button.disabled = !ready(s);
+  if (!s.crew) button.textContent = 'Choose how you’ll work to continue';
+  else if (!s.lane) button.textContent = 'Choose a setting type to continue';
+  else if (!s.destination) button.textContent = 'Choose a place to continue';
+  else if (!destinationReady(s)) button.textContent = 'Enter your place to continue';
+  else if (!responseProvided(s)) button.textContent = 'Write your response to continue';
+  else button.textContent = 'Prepare text for Canvas';
+}
+
+function canvasText(day, s) {
+  const crew = choice(CREWS, s.crew); const lane = choice(LANES, s.lane);
+  return [
+    `KOL ATLANTA FIELD QUEST — ${day.short.toUpperCase()} / ${day.theme.toUpperCase()}`,
+    '',
+    `WHERE\n${placeTitle(s)} · ${lane[1]}`,
+    '',
+    `HOW I WORKED\n${crew[1]} — ${crew[2]}`,
+    '',
+    `MY QUEST\n${questPrompt(day, s)}`,
+    '',
+    `MY RESPONSE\n${s.note.trim()}`,
+    '',
+    'REQUIRED PHOTO\nAdd one photo of the Atlanta setting where I completed the activity in Canvas.',
+  ].join('\n');
+}
+
+$('#build-button').addEventListener('click', () => {
+  if (!ready(currentState())) return;
+  const day = currentDay(); const s = currentState();
+  $('#canvas-output').value = canvasText(day, s); $('#stamp-day').textContent = day.short.toUpperCase();
+  updateProgress();
+  $('#output-card').hidden = false; $('#output-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+async function copyResponse() {
+  const day = currentDay(); const s = currentState();
+  if (!ready(s)) return;
+  const value = canvasText(day, s); const output = $('#canvas-output');
+  output.value = value;
+  let copied = false;
+  try { await navigator.clipboard.writeText(value); copied = true; }
+  catch {
+    // Fallback for local files and embedded browsers without clipboard permission.
+    try { output.focus(); output.select(); output.setSelectionRange(0, value.length); copied = document.execCommand('copy'); } catch { /* Manual copying remains available. */ }
+  }
+  if (active !== day.id || !ready(currentState()) || canvasText(currentDay(), currentState()) !== value) return;
+  if (copied) {
+    copiedResponses[day.id] = value;
+    $('#copy-status').textContent = 'Copied. Paste the text into Canvas, add your photo, and submit there.';
+    const stamp = $('#passport-stamp'); stamp.classList.remove('stamp-in'); void stamp.offsetWidth; stamp.classList.add('stamp-in');
+  } else {
+    $('#copy-status').textContent = 'Automatic copying is unavailable. Select and copy the full response manually, then paste it into Canvas. The header may still say “Not copied”; that does not affect your submission.';
+  }
+  updateProgress();
+}
+
+$('#copy-button').addEventListener('click', copyResponse);
+$('#clear-button').addEventListener('click', () => {
+  if (!window.confirm('Clear this day’s saved choices and response?')) return;
+  state[active] = blankDay(); markDraftChanged(); buildNavigation(); renderDay();
+});
+
+function registerWebMcp() {
+  const context = document.modelContext; if (!context?.registerTool) return;
+  try {
+    Promise.resolve(context.registerTool({
+      name: 'get_daily_field_quest', title: 'Get daily field quest', description: 'Read the selected Kelley Atlanta Field Quest and submission readiness.',
+      inputSchema: { type: 'object', properties: {}, additionalProperties: false }, annotations: { readOnlyHint: true },
+      execute() { const day = currentDay(); const s = currentState(); return { day: day.id, crew: s.crew, settingType: s.lane, destination: s.destination, customPlace: s.customPlace || null, place: s.destination ? placeTitle(s) : null, copied: responseCopied(day, s), ready: ready(s), canvasResponse: ready(s) ? canvasText(day, s) : null }; },
+    })).catch(() => {});
+  } catch { /* WebMCP is optional. */ }
+}
+
+buildNavigation(); renderDay(); registerWebMcp();
+
+    </script>
+  </body>
+</html>
+
